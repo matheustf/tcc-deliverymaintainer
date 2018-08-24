@@ -30,6 +30,8 @@ public class Entrega implements Serializable{
 	
 	@NotNull
 	private String codigoDaEntrega;
+	
+	private String codigoDeRastreio;
 
 	@NotNull
 	private String idCliente;
@@ -48,6 +50,10 @@ public class Entrega implements Serializable{
 	
 	@NotNull
 	private List<HistoricoDeEntrega> historicoDeEntrega;
+	
+	public void addHistoricoDeEntrega(HistoricoDeEntrega historicoDeEntrega){
+		this.historicoDeEntrega.add(historicoDeEntrega);
+	}
 	
 	public Entrega update(Entrega entregaDoPedido, Entrega detailsEntregaDoPedido) {
 		entregaDoPedido.setEstimativaDeEntrega(detailsEntregaDoPedido.getEstimativaDeEntrega());

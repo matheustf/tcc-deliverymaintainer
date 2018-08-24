@@ -8,48 +8,60 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.puc.tcc.deliverymaintainer.component.CorreiosComponent;
 import com.puc.tcc.deliverymaintainer.consts.Constants;
-import com.puc.tcc.deliverymaintainer.dtos.EntregaDTO;
+import com.puc.tcc.deliverymaintainer.enums.StatusDaEntrega;
 import com.puc.tcc.deliverymaintainer.exceptions.DeliveryMaintainerException;
 import com.puc.tcc.deliverymaintainer.model.Entrega;
+import com.puc.tcc.deliverymaintainer.model.HistoricoDeEntrega;
 import com.puc.tcc.deliverymaintainer.repository.EntregaRepository;
+import com.puc.tcc.deliverymaintainer.utils.Util;
 
 @Service
 public class EntregaServiceImpl implements EntregaService {
 
 	EntregaRepository entregaRepository;
+	CorreiosComponent correiosComponent;
 	
 	@Autowired
-	public EntregaServiceImpl(EntregaRepository entregaRepository) {
+	public EntregaServiceImpl(EntregaRepository entregaRepository, CorreiosComponent correiosComponent) {
 		this.entregaRepository = entregaRepository;
+		this.correiosComponent = correiosComponent;
+	}
+
+	private Entrega consultar(String codigoDeRastreio) throws DeliveryMaintainerException {
+		
+		Optional<Entrega> optional = entregaRepository.findByCodigoDeRastreio(codigoDeRastreio);
+		
+		return validarEntrega(optional);
 	}
 
 	@Override
-	public EntregaDTO consultar(String id) throws DeliveryMaintainerException {
+	public void checarEntrega(String codigoDeRastreio, StatusDaEntrega statusDaEntrega) throws DeliveryMaintainerException {
 		
-		Optional<Entrega> optional = entregaRepository.findById(id);
-		Entrega entrega = validarEntrega(optional);
+		boolean isNovoStatusDeEntrega = correiosComponent.isNovoStatusDeEntrega(codigoDeRastreio, statusDaEntrega);
 		
-		EntregaDTO entregaDTO = modelMapper().map(entrega, EntregaDTO.class);
+		if(isNovoStatusDeEntrega) {
+			updateStatusEntrega(codigoDeRastreio, statusDaEntrega);
+		}	
 		
-		return entregaDTO;
 	}
 
-	@Override
-	public EntregaDTO atualizar(String id, EntregaDTO entregaDTODetails) throws DeliveryMaintainerException {
+	private void updateStatusEntrega(String codigoDeRastreio, StatusDaEntrega statusDaEntrega) throws DeliveryMaintainerException {
+		Entrega entrega = consultar(codigoDeRastreio);
 		
-		Optional<Entrega> optional = entregaRepository.findById(id);
-		Entrega entrega = validarEntrega(optional);
+		//TODO Criar maquina de estado para validar caminho correto
 		
-		Entrega entregaDetails = modelMapper().map(entregaDTODetails, Entrega.class);
+		HistoricoDeEntrega historicoDeEntrega = HistoricoDeEntrega
+				.builder()
+				.data(Util.dataNow())
+				.statusDaEntrega(statusDaEntrega)
+				.build();
 
-		entrega = entrega.update(entrega, entregaDetails);
-
+		entrega.addHistoricoDeEntrega(historicoDeEntrega);
+		entrega.setStatusDaEntrega(statusDaEntrega);
+		
 		entregaRepository.save(entrega);
-
-		EntregaDTO entregaDTO = modelMapper().map(entrega, EntregaDTO.class);
-
-		return entregaDTO;
 	}
 
 	@Bean

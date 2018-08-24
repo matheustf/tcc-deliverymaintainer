@@ -10,7 +10,7 @@ public class TesteAPIController {
 	
 	@GetMapping("v1/main")
 	public ResponseEntity<String> testeAPI() {
-		return new ResponseEntity<String>("API Maintainer OK", HttpStatus.OK);
+		return new ResponseEntity<String>("API Maintainer 1 OK", HttpStatus.OK);
 	}
 
 
