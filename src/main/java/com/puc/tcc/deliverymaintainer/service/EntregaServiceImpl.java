@@ -39,10 +39,10 @@ public class EntregaServiceImpl implements EntregaService {
 	@Override
 	public void checarEntrega(String codigoDeRastreio, StatusDaEntrega statusDaEntrega) throws DeliveryMaintainerException {
 		
-		boolean isNovoStatusDeEntrega = correiosComponent.isNovoStatusDeEntrega(codigoDeRastreio, statusDaEntrega);
+		StatusDaEntrega statusEntregaCorreio = correiosComponent.postCorreio(codigoDeRastreio);
 		
-		if(isNovoStatusDeEntrega) {
-			updateStatusEntrega(codigoDeRastreio, statusDaEntrega);
+		if(statusEntregaCorreio != statusDaEntrega) {
+			updateStatusEntrega(codigoDeRastreio, statusEntregaCorreio);
 		}	
 		
 	}

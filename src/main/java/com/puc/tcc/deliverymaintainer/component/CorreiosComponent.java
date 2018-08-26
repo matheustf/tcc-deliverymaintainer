@@ -16,16 +16,9 @@ public class CorreiosComponent {
 		this.mock = mock;
 	}
 
-	public String postCorreio(String codigoDeRastreio) throws DeliveryMaintainerException {
+	public StatusDaEntrega postCorreio(String codigoDeRastreio) throws DeliveryMaintainerException {
 		MockCorreios mockCorreios = mock.consultarMockCorreios(codigoDeRastreio);
-		return mockCorreios.getStatus();
+		return StatusDaEntrega.valueOf(mockCorreios.getStatus());
 	}
 	
-	public boolean isNovoStatusDeEntrega(String codigoDeRastreio, StatusDaEntrega statusDaEntrega) throws DeliveryMaintainerException {
-		if(!postCorreio(codigoDeRastreio).equalsIgnoreCase(statusDaEntrega.toString())) {
-			return true;
-		}
-		return false;
-	}
-
 }

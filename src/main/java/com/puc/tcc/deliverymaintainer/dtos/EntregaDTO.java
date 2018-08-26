@@ -26,7 +26,7 @@ public class EntregaDTO {
 	private String idFornecedor;
 	
 	@NotNull()
-	private String idPedido;
+	private String idCompra;
 	
 	@NotNull()
 	private String estimativaDeEntrega;
