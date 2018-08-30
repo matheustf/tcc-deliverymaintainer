@@ -49,7 +49,7 @@ public class EntregaServiceImpl implements EntregaService {
 
 	private void updateStatusEntrega(String codigoDeRastreio, StatusDaEntrega statusDaEntrega) throws DeliveryMaintainerException {
 		Entrega entrega = consultar(codigoDeRastreio);
-		
+		System.out.println("Atualizando Status da Entrega");
 		//TODO Criar maquina de estado para validar caminho correto
 		
 		HistoricoDeEntrega historicoDeEntrega = HistoricoDeEntrega

@@ -1,5 +1,8 @@
 package com.puc.tcc.deliverymaintainer.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +31,7 @@ public class DeliverymaintainerController {
 	@PostMapping("")
 	public ResponseEntity<EntregaDTO> checarEntrega(@RequestBody CheckFeignDTO check)
 			throws DeliveryMaintainerException {
-
+		System.out.println("Execute Delivery Maintainer");
 		entregaService.checarEntrega(check.getCodigoDeRastreio(), StatusDaEntrega.valueOf(check.getStatusDaEntrega()));
 
 		return new ResponseEntity<EntregaDTO>(HttpStatus.OK);
