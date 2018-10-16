@@ -43,6 +43,12 @@ public class Entrega implements Serializable{
 	private String idCompra;
 	
 	@NotNull
+	private String nomeDoCliente;
+	
+	@NotNull
+	private String emailCliente;
+	
+	@NotNull
 	private String estimativaDeEntrega;
 	
 	@NotNull

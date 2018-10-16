@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.puc.tcc.deliverymaintainer.component.CorreiosComponent;
+import com.puc.tcc.deliverymaintainer.config.email.EmailSenderComponent;
 import com.puc.tcc.deliverymaintainer.consts.Constants;
 import com.puc.tcc.deliverymaintainer.enums.StatusDaEntrega;
 import com.puc.tcc.deliverymaintainer.exceptions.DeliveryMaintainerException;
@@ -18,15 +19,17 @@ import com.puc.tcc.deliverymaintainer.repository.EntregaRepository;
 import com.puc.tcc.deliverymaintainer.utils.Util;
 
 @Service
-public class EntregaServiceImpl implements EntregaService {
+public class DeliveryMaintainerServiceImpl implements DeliveryMaintainerService {
 
 	EntregaRepository entregaRepository;
 	CorreiosComponent correiosComponent;
+	EmailSenderComponent emailSenderComponent;
 	
 	@Autowired
-	public EntregaServiceImpl(EntregaRepository entregaRepository, CorreiosComponent correiosComponent) {
+	public DeliveryMaintainerServiceImpl(EntregaRepository entregaRepository, CorreiosComponent correiosComponent, EmailSenderComponent emailSenderComponent) {
 		this.entregaRepository = entregaRepository;
 		this.correiosComponent = correiosComponent;
+		this.emailSenderComponent = emailSenderComponent;
 	}
 
 	private Entrega consultar(String codigoDeRastreio) throws DeliveryMaintainerException {
@@ -62,6 +65,7 @@ public class EntregaServiceImpl implements EntregaService {
 		entrega.setStatusDaEntrega(statusDaEntrega);
 		
 		entregaRepository.save(entrega);
+		emailSenderComponent.emailDeEntrega(entrega.getNomeDoCliente(), entrega.getEmailCliente(), statusDaEntrega);
 	}
 
 	@Bean

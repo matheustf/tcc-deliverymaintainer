@@ -15,17 +15,17 @@ import com.puc.tcc.deliverymaintainer.dtos.CheckFeignDTO;
 import com.puc.tcc.deliverymaintainer.dtos.EntregaDTO;
 import com.puc.tcc.deliverymaintainer.enums.StatusDaEntrega;
 import com.puc.tcc.deliverymaintainer.exceptions.DeliveryMaintainerException;
-import com.puc.tcc.deliverymaintainer.service.EntregaService;
+import com.puc.tcc.deliverymaintainer.service.DeliveryMaintainerService;
 
 @RestController
 @RequestMapping("/checarEntrega")
 public class DeliverymaintainerController {
 
-	private EntregaService entregaService;
+	private DeliveryMaintainerService entregaService;
 
 	@Autowired
-	public DeliverymaintainerController(EntregaService entregaService) {
-		this.entregaService = entregaService;
+	public DeliverymaintainerController(DeliveryMaintainerService deliveryMaintainerService) {
+		this.entregaService = deliveryMaintainerService;
 	}
 
 	@PostMapping("")
